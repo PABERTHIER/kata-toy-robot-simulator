@@ -3,13 +3,13 @@
 public class ToyRobot
 {
     public Position Position { get; private set; }
-    public Direction Direction { get; set; }
+    public DirectionEnum DirectionEnum { get; set; }
     public bool HasBeenPlaced { get; private set; }
 
-    public void Place(Position coordinates, Direction direction)
+    public void Place(Position coordinates, DirectionEnum directionEnum)
     {
         Position = coordinates;
-        Direction = direction;
+        DirectionEnum = directionEnum;
 
         if (!HasBeenPlaced)
         {

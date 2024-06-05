@@ -178,40 +178,40 @@ public class MotionCommandsTests
     }
 
     [Test]
-    [TestCase(0, 0, Direction.North)]
-    [TestCase(1, 1, Direction.East)]
-    [TestCase(4, 1, Direction.West)]
-    [TestCase(0, 5, Direction.South)]
-    public void Place_ValidPosition_ReturnsTrueAndUpdatesPosition(short x, short y, Direction direction)
+    [TestCase(0, 0, DirectionEnum.North)]
+    [TestCase(1, 1, DirectionEnum.East)]
+    [TestCase(4, 1, DirectionEnum.West)]
+    [TestCase(0, 5, DirectionEnum.South)]
+    public void Place_ValidPosition_ReturnsTrueAndUpdatesPosition(short x, short y, DirectionEnum directionEnum)
     {
         Position expectedPosition = new() { X = x, Y = y };
 
-        bool result = _motionCommands!.Place(expectedPosition, direction);
+        bool result = _motionCommands!.Place(expectedPosition, directionEnum);
 
         Assert.Multiple(() =>
         {
             Assert.That(_toyRobot!.Position, Is.EqualTo(expectedPosition));
-            Assert.That(_toyRobot!.Direction, Is.EqualTo(direction));
+            Assert.That(_toyRobot!.DirectionEnum, Is.EqualTo(directionEnum));
             Assert.That(_toyRobot!.HasBeenPlaced, Is.True);
             Assert.That(result, Is.True);
         });
     }
 
     [Test]
-    [TestCase(-1, 0, Direction.North)]
-    [TestCase(6, -1, Direction.East)]
-    [TestCase(-1, -1, Direction.West)]
-    [TestCase(10, 10, Direction.South)]
-    public void Place_InvalidPosition_ReturnsFalseAndDoesNotUpdatePosition(short x, short y, Direction direction)
+    [TestCase(-1, 0, DirectionEnum.North)]
+    [TestCase(6, -1, DirectionEnum.East)]
+    [TestCase(-1, -1, DirectionEnum.West)]
+    [TestCase(10, 10, DirectionEnum.South)]
+    public void Place_InvalidPosition_ReturnsFalseAndDoesNotUpdatePosition(short x, short y, DirectionEnum directionEnum)
     {
         Position expectedPosition = new() { X = 0, Y = 0 };
 
-        bool result = _motionCommands!.Place(new Position { X = x, Y = y }, direction);
+        bool result = _motionCommands!.Place(new Position { X = x, Y = y }, directionEnum);
 
         Assert.Multiple(() =>
         {
             Assert.That(_toyRobot!.Position, Is.EqualTo(expectedPosition));
-            Assert.That(_toyRobot!.Direction, Is.EqualTo(Direction.North));
+            Assert.That(_toyRobot!.DirectionEnum, Is.EqualTo(DirectionEnum.North));
             Assert.That(_toyRobot!.HasBeenPlaced, Is.False);
             Assert.That(result, Is.False);
         });
@@ -227,28 +227,28 @@ public class MotionCommandsTests
         Assert.Multiple(() =>
         {
             Assert.That(_toyRobot!.Position, Is.EqualTo(expectedPosition));
-            Assert.That(_toyRobot!.Direction, Is.EqualTo(Direction.North));
+            Assert.That(_toyRobot!.DirectionEnum, Is.EqualTo(DirectionEnum.North));
             Assert.That(_toyRobot!.HasBeenPlaced, Is.False);
             Assert.That(result, Is.False);
         });
     }
 
     [Test]
-    [TestCase(0, 0, 0, 1, Direction.North)]
-    [TestCase(1, 1, 2, 1, Direction.East)]
-    [TestCase(4, 1, 3, 1, Direction.West)]
-    [TestCase(0, 5, 0, 4, Direction.South)]
-    public void Move_PlaceCalledFirstlyAndValidPosition_ReturnsTrueAndUpdatesPosition(short x, short y, short expectedX, short expectedY, Direction direction)
+    [TestCase(0, 0, 0, 1, DirectionEnum.North)]
+    [TestCase(1, 1, 2, 1, DirectionEnum.East)]
+    [TestCase(4, 1, 3, 1, DirectionEnum.West)]
+    [TestCase(0, 5, 0, 4, DirectionEnum.South)]
+    public void Move_PlaceCalledFirstlyAndValidPosition_ReturnsTrueAndUpdatesPosition(short x, short y, short expectedX, short expectedY, DirectionEnum directionEnum)
     {
         Position expectedPositionAfterPlace = new() { X = x, Y = y };
         Position expectedPositionAfterMove = new() { X = expectedX, Y = expectedY };
 
-        bool placeResult = _motionCommands!.Place(expectedPositionAfterPlace, direction);
+        bool placeResult = _motionCommands!.Place(expectedPositionAfterPlace, directionEnum);
 
         Assert.Multiple(() =>
         {
             Assert.That(_toyRobot!.Position, Is.EqualTo(expectedPositionAfterPlace));
-            Assert.That(_toyRobot!.Direction, Is.EqualTo(direction));
+            Assert.That(_toyRobot!.DirectionEnum, Is.EqualTo(directionEnum));
             Assert.That(_toyRobot!.HasBeenPlaced, Is.True);
             Assert.That(placeResult, Is.True);
         });
@@ -258,26 +258,26 @@ public class MotionCommandsTests
         Assert.Multiple(() =>
         {
             Assert.That(_toyRobot!.Position, Is.EqualTo(expectedPositionAfterMove));
-            Assert.That(_toyRobot!.Direction, Is.EqualTo(direction));
+            Assert.That(_toyRobot!.DirectionEnum, Is.EqualTo(directionEnum));
             Assert.That(moveResult, Is.True);
         });
     }
 
     [Test]
-    [TestCase(0, 5, Direction.North)]
-    [TestCase(5, 0, Direction.East)]
-    [TestCase(0, 0, Direction.West)]
-    [TestCase(0, 0, Direction.South)]
-    public void Move_PlaceCalledFirstlyAndOutOfBoundPosition_ReturnsFalseAndDoesNotUpdatePosition(short x, short y, Direction direction)
+    [TestCase(0, 5, DirectionEnum.North)]
+    [TestCase(5, 0, DirectionEnum.East)]
+    [TestCase(0, 0, DirectionEnum.West)]
+    [TestCase(0, 0, DirectionEnum.South)]
+    public void Move_PlaceCalledFirstlyAndOutOfBoundPosition_ReturnsFalseAndDoesNotUpdatePosition(short x, short y, DirectionEnum directionEnum)
     {
         Position expectedPosition = new() { X = x, Y = y };
 
-        bool placeResult = _motionCommands!.Place(expectedPosition, direction);
+        bool placeResult = _motionCommands!.Place(expectedPosition, directionEnum);
 
         Assert.Multiple(() =>
         {
             Assert.That(_toyRobot!.Position, Is.EqualTo(expectedPosition));
-            Assert.That(_toyRobot!.Direction, Is.EqualTo(direction));
+            Assert.That(_toyRobot!.DirectionEnum, Is.EqualTo(directionEnum));
             Assert.That(_toyRobot!.HasBeenPlaced, Is.True);
             Assert.That(placeResult, Is.True);
         });
@@ -287,7 +287,7 @@ public class MotionCommandsTests
         Assert.Multiple(() =>
         {
             Assert.That(_toyRobot!.Position, Is.EqualTo(expectedPosition));
-            Assert.That(_toyRobot!.Direction, Is.EqualTo(direction));
+            Assert.That(_toyRobot!.DirectionEnum, Is.EqualTo(directionEnum));
             Assert.That(moveResult, Is.False);
         });
     }
@@ -302,27 +302,27 @@ public class MotionCommandsTests
         Assert.Multiple(() =>
         {
             Assert.That(_toyRobot!.Position, Is.EqualTo(expectedPosition));
-            Assert.That(_toyRobot!.Direction, Is.EqualTo(Direction.North));
+            Assert.That(_toyRobot!.DirectionEnum, Is.EqualTo(DirectionEnum.North));
             Assert.That(_toyRobot!.HasBeenPlaced, Is.False);
             Assert.That(result, Is.False);
         });
     }
 
     [Test]
-    [TestCase(0, 0, Direction.North, Direction.West)]
-    [TestCase(1, 1, Direction.East, Direction.North)]
-    [TestCase(4, 1, Direction.West, Direction.South)]
-    [TestCase(0, 5, Direction.South, Direction.East)]
-    public void Left_PlaceCalledFirstly_ReturnsTrueAndUpdatesDirection(short x, short y, Direction direction, Direction expectedDirection)
+    [TestCase(0, 0, DirectionEnum.North, DirectionEnum.West)]
+    [TestCase(1, 1, DirectionEnum.East, DirectionEnum.North)]
+    [TestCase(4, 1, DirectionEnum.West, DirectionEnum.South)]
+    [TestCase(0, 5, DirectionEnum.South, DirectionEnum.East)]
+    public void Left_PlaceCalledFirstly_ReturnsTrueAndUpdatesDirection(short x, short y, DirectionEnum directionEnum, DirectionEnum expectedDirectionEnum)
     {
         Position expectedPosition = new() { X = x, Y = y };
 
-        bool placeResult = _motionCommands!.Place(expectedPosition, direction);
+        bool placeResult = _motionCommands!.Place(expectedPosition, directionEnum);
 
         Assert.Multiple(() =>
         {
             Assert.That(_toyRobot!.Position, Is.EqualTo(expectedPosition));
-            Assert.That(_toyRobot!.Direction, Is.EqualTo(direction));
+            Assert.That(_toyRobot!.DirectionEnum, Is.EqualTo(directionEnum));
             Assert.That(_toyRobot!.HasBeenPlaced, Is.True);
             Assert.That(placeResult, Is.True);
         });
@@ -332,7 +332,7 @@ public class MotionCommandsTests
         Assert.Multiple(() =>
         {
             Assert.That(_toyRobot!.Position, Is.EqualTo(expectedPosition));
-            Assert.That(_toyRobot!.Direction, Is.EqualTo(expectedDirection));
+            Assert.That(_toyRobot!.DirectionEnum, Is.EqualTo(expectedDirectionEnum));
             Assert.That(leftResult, Is.True);
         });
     }
@@ -347,27 +347,27 @@ public class MotionCommandsTests
         Assert.Multiple(() =>
         {
             Assert.That(_toyRobot!.Position, Is.EqualTo(expectedPosition));
-            Assert.That(_toyRobot!.Direction, Is.EqualTo(Direction.North));
+            Assert.That(_toyRobot!.DirectionEnum, Is.EqualTo(DirectionEnum.North));
             Assert.That(_toyRobot!.HasBeenPlaced, Is.False);
             Assert.That(result, Is.False);
         });
     }
 
     [Test]
-    [TestCase(0, 0, Direction.North, Direction.East)]
-    [TestCase(1, 1, Direction.East, Direction.South)]
-    [TestCase(4, 1, Direction.West, Direction.North)]
-    [TestCase(0, 5, Direction.South, Direction.West)]
-    public void Right_PlaceCalledFirstly_ReturnsTrueAndUpdatesDirection(short x, short y, Direction direction, Direction expectedDirection)
+    [TestCase(0, 0, DirectionEnum.North, DirectionEnum.East)]
+    [TestCase(1, 1, DirectionEnum.East, DirectionEnum.South)]
+    [TestCase(4, 1, DirectionEnum.West, DirectionEnum.North)]
+    [TestCase(0, 5, DirectionEnum.South, DirectionEnum.West)]
+    public void Right_PlaceCalledFirstly_ReturnsTrueAndUpdatesDirection(short x, short y, DirectionEnum directionEnum, DirectionEnum expectedDirectionEnum)
     {
         Position expectedPosition = new() { X = x, Y = y };
 
-        bool placeResult = _motionCommands!.Place(expectedPosition, direction);
+        bool placeResult = _motionCommands!.Place(expectedPosition, directionEnum);
 
         Assert.Multiple(() =>
         {
             Assert.That(_toyRobot!.Position, Is.EqualTo(expectedPosition));
-            Assert.That(_toyRobot!.Direction, Is.EqualTo(direction));
+            Assert.That(_toyRobot!.DirectionEnum, Is.EqualTo(directionEnum));
             Assert.That(_toyRobot!.HasBeenPlaced, Is.True);
             Assert.That(placeResult, Is.True);
         });
@@ -377,7 +377,7 @@ public class MotionCommandsTests
         Assert.Multiple(() =>
         {
             Assert.That(_toyRobot!.Position, Is.EqualTo(expectedPosition));
-            Assert.That(_toyRobot!.Direction, Is.EqualTo(expectedDirection));
+            Assert.That(_toyRobot!.DirectionEnum, Is.EqualTo(expectedDirectionEnum));
             Assert.That(rightResult, Is.True);
         });
     }
@@ -392,28 +392,28 @@ public class MotionCommandsTests
         Assert.Multiple(() =>
         {
             Assert.That(_toyRobot!.Position, Is.EqualTo(expectedPosition));
-            Assert.That(_toyRobot!.Direction, Is.EqualTo(Direction.North));
+            Assert.That(_toyRobot!.DirectionEnum, Is.EqualTo(DirectionEnum.North));
             Assert.That(_toyRobot!.HasBeenPlaced, Is.False);
             Assert.That(result, Is.False);
         });
     }
 
     [Test]
-    [TestCase(0, 0, Direction.North)]
-    [TestCase(1, 1, Direction.East)]
-    [TestCase(4, 1, Direction.West)]
-    [TestCase(0, 5, Direction.South)]
-    public void Report_PlaceCalledFirstly_ReturnsTrueAndReports(short x, short y, Direction direction)
+    [TestCase(0, 0, DirectionEnum.North)]
+    [TestCase(1, 1, DirectionEnum.East)]
+    [TestCase(4, 1, DirectionEnum.West)]
+    [TestCase(0, 5, DirectionEnum.South)]
+    public void Report_PlaceCalledFirstly_ReturnsTrueAndReports(short x, short y, DirectionEnum directionEnum)
     {
         Position expectedPosition = new() { X = x, Y = y };
-        string expectedOutput = $"{x},{y},{direction.ToString().ToUpper()}";
+        string expectedOutput = $"{x},{y},{directionEnum.ToString().ToUpper()}";
 
-        bool placeResult = _motionCommands!.Place(expectedPosition, direction);
+        bool placeResult = _motionCommands!.Place(expectedPosition, directionEnum);
 
         Assert.Multiple(() =>
         {
             Assert.That(_toyRobot!.Position, Is.EqualTo(expectedPosition));
-            Assert.That(_toyRobot!.Direction, Is.EqualTo(direction));
+            Assert.That(_toyRobot!.DirectionEnum, Is.EqualTo(directionEnum));
             Assert.That(_toyRobot!.HasBeenPlaced, Is.True);
             Assert.That(placeResult, Is.True);
         });
@@ -429,7 +429,7 @@ public class MotionCommandsTests
         Assert.Multiple(() =>
         {
             Assert.That(_toyRobot!.Position, Is.EqualTo(expectedPosition));
-            Assert.That(_toyRobot!.Direction, Is.EqualTo(direction));
+            Assert.That(_toyRobot!.DirectionEnum, Is.EqualTo(directionEnum));
             Assert.That(_toyRobot!.HasBeenPlaced, Is.True);
             Assert.That(reportResult, Is.True);
             Assert.That(consoleOutput, Is.EqualTo(expectedOutput));
@@ -443,12 +443,12 @@ public class MotionCommandsTests
         Position expectedPositionAfterMove = new() { X = 0, Y = 1 };
         const string expectedOutput = "0,1,NORTH";
 
-        bool placeResult = _motionCommands!.Place(expectedPosition, Direction.North);
+        bool placeResult = _motionCommands!.Place(expectedPosition, DirectionEnum.North);
 
         Assert.Multiple(() =>
         {
             Assert.That(_toyRobot!.Position, Is.EqualTo(expectedPosition));
-            Assert.That(_toyRobot!.Direction, Is.EqualTo(Direction.North));
+            Assert.That(_toyRobot!.DirectionEnum, Is.EqualTo(DirectionEnum.North));
             Assert.That(_toyRobot!.HasBeenPlaced, Is.True);
             Assert.That(placeResult, Is.True);
         });
@@ -458,7 +458,7 @@ public class MotionCommandsTests
         Assert.Multiple(() =>
         {
             Assert.That(_toyRobot!.Position, Is.EqualTo(expectedPositionAfterMove));
-            Assert.That(_toyRobot!.Direction, Is.EqualTo(Direction.North));
+            Assert.That(_toyRobot!.DirectionEnum, Is.EqualTo(DirectionEnum.North));
             Assert.That(moveResult, Is.True);
         });
 
@@ -473,7 +473,7 @@ public class MotionCommandsTests
         Assert.Multiple(() =>
         {
             Assert.That(_toyRobot!.Position, Is.EqualTo(expectedPositionAfterMove));
-            Assert.That(_toyRobot!.Direction, Is.EqualTo(Direction.North));
+            Assert.That(_toyRobot!.DirectionEnum, Is.EqualTo(DirectionEnum.North));
             Assert.That(_toyRobot!.HasBeenPlaced, Is.True);
             Assert.That(reportResult, Is.True);
             Assert.That(consoleOutput, Is.EqualTo(expectedOutput));
@@ -486,12 +486,12 @@ public class MotionCommandsTests
         Position expectedPosition = new() { X = 0, Y = 0 };
         const string expectedOutput = "0,0,WEST";
 
-        bool placeResult = _motionCommands!.Place(expectedPosition, Direction.North);
+        bool placeResult = _motionCommands!.Place(expectedPosition, DirectionEnum.North);
 
         Assert.Multiple(() =>
         {
             Assert.That(_toyRobot!.Position, Is.EqualTo(expectedPosition));
-            Assert.That(_toyRobot!.Direction, Is.EqualTo(Direction.North));
+            Assert.That(_toyRobot!.DirectionEnum, Is.EqualTo(DirectionEnum.North));
             Assert.That(_toyRobot!.HasBeenPlaced, Is.True);
             Assert.That(placeResult, Is.True);
         });
@@ -501,7 +501,7 @@ public class MotionCommandsTests
         Assert.Multiple(() =>
         {
             Assert.That(_toyRobot!.Position, Is.EqualTo(expectedPosition));
-            Assert.That(_toyRobot!.Direction, Is.EqualTo(Direction.West));
+            Assert.That(_toyRobot!.DirectionEnum, Is.EqualTo(DirectionEnum.West));
             Assert.That(leftResult, Is.True);
         });
 
@@ -516,7 +516,7 @@ public class MotionCommandsTests
         Assert.Multiple(() =>
         {
             Assert.That(_toyRobot!.Position, Is.EqualTo(expectedPosition));
-            Assert.That(_toyRobot!.Direction, Is.EqualTo(Direction.West));
+            Assert.That(_toyRobot!.DirectionEnum, Is.EqualTo(DirectionEnum.West));
             Assert.That(_toyRobot!.HasBeenPlaced, Is.True);
             Assert.That(reportResult, Is.True);
             Assert.That(consoleOutput, Is.EqualTo(expectedOutput));
@@ -529,7 +529,7 @@ public class MotionCommandsTests
         Position expectedPosition = new() { X = 3, Y = 3 };
         const string expectedOutput = "3,3,NORTH";
 
-        _motionCommands!.Place(new Position { X = 1, Y = 2 }, Direction.East);
+        _motionCommands!.Place(new Position { X = 1, Y = 2 }, DirectionEnum.East);
         _motionCommands!.Move();
         _motionCommands!.Move();
         _motionCommands!.Left();
@@ -546,7 +546,7 @@ public class MotionCommandsTests
         Assert.Multiple(() =>
         {
             Assert.That(_toyRobot!.Position, Is.EqualTo(expectedPosition));
-            Assert.That(_toyRobot!.Direction, Is.EqualTo(Direction.North));
+            Assert.That(_toyRobot!.DirectionEnum, Is.EqualTo(DirectionEnum.North));
             Assert.That(_toyRobot!.HasBeenPlaced, Is.True);
             Assert.That(reportResult, Is.True);
             Assert.That(consoleOutput, Is.EqualTo(expectedOutput));
