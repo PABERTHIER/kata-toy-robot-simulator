@@ -67,6 +67,18 @@ public class MotionCommands
         return true;
     }
 
+    public bool Report(ToyRobot toyRobot)
+    {
+        if (!toyRobot.HasBeenPlaced)
+        {
+            return false;
+        }
+
+        Console.Write($"{toyRobot.Position.X},{toyRobot.Position.Y},{toyRobot.Facing.ToString().ToUpper()}");
+
+        return true;
+    }
+
     private static FacingEnum Rotate(FacingEnum facing, bool isClockWise)
     {
         if (isClockWise)

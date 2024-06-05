@@ -230,4 +230,60 @@ public class ToyRobotSimulatorTests
             Assert.That(rightResult, Is.True);
         });
     }
+
+    [Test]
+    public void Report_PlaceNotCalledFirstly_ReturnsFalseAndDoesNotReport()
+    {
+        Position expectedPosition = new() { X = 0, Y = 0 };
+        ToyRobot toyRobot = new (_tableBoundaries!);
+
+        bool result = _motionCommands!.Report(toyRobot);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(toyRobot.Position, Is.EqualTo(expectedPosition));
+            Assert.That(toyRobot.Facing, Is.EqualTo(FacingEnum.North));
+            Assert.That(toyRobot.HasBeenPlaced, Is.False);
+            Assert.That(result, Is.False);
+        });
+    }
+
+    [Test]
+    [TestCase(0, 0, FacingEnum.North)]
+    [TestCase(1, 1, FacingEnum.East)]
+    [TestCase(4, 1, FacingEnum.West)]
+    [TestCase(0, 5, FacingEnum.South)]
+    public void Report_PlaceCalledFirstly_ReturnsTrueAndReports(short x, short y, FacingEnum facing)
+    {
+        Position expectedPosition = new() { X = x, Y = y };
+        string expectedOutput = $"{x},{y},{facing.ToString().ToUpper()}";
+        ToyRobot toyRobot = new (_tableBoundaries!);
+
+        bool placeResult = _motionCommands!.Place(toyRobot, x, y, facing);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(toyRobot.Position, Is.EqualTo(expectedPosition));
+            Assert.That(toyRobot.Facing, Is.EqualTo(facing));
+            Assert.That(toyRobot.HasBeenPlaced, Is.True);
+            Assert.That(placeResult, Is.True);
+        });
+
+        // Set up a StringWriter to capture console output
+        StringWriter stringWriter = new();
+        Console.SetOut(stringWriter);
+
+        bool reportResult = _motionCommands!.Report(toyRobot);
+
+        string consoleOutput = stringWriter.ToString();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(toyRobot.Position, Is.EqualTo(expectedPosition));
+            Assert.That(toyRobot.Facing, Is.EqualTo(facing));
+            Assert.That(toyRobot.HasBeenPlaced, Is.True);
+            Assert.That(reportResult, Is.True);
+            Assert.That(consoleOutput, Is.EqualTo(expectedOutput));
+        });
+    }
 }
