@@ -1,1 +1,1 @@
-# kata-toy-robot-simulator
+# Kata Toy Robot Simulator
