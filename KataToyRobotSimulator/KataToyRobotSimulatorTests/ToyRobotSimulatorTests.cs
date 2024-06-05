@@ -136,4 +136,98 @@ public class ToyRobotSimulatorTests
             Assert.That(moveResult, Is.False);
         });
     }
+
+    [Test]
+    public void Left_PlaceNotCalledFirstly_ReturnsFalseAndDoesNotUpdateFacing()
+    {
+        Position expectedPosition = new() { X = 0, Y = 0 };
+        ToyRobot toyRobot = new (_tableBoundaries!);
+
+        bool result = _motionCommands!.Left(toyRobot);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(toyRobot.Position, Is.EqualTo(expectedPosition));
+            Assert.That(toyRobot.Facing, Is.EqualTo(FacingEnum.North));
+            Assert.That(toyRobot.HasBeenPlaced, Is.False);
+            Assert.That(result, Is.False);
+        });
+    }
+
+    [Test]
+    [TestCase(0, 0, FacingEnum.North, FacingEnum.West)]
+    [TestCase(1, 1, FacingEnum.East, FacingEnum.North)]
+    [TestCase(4, 1, FacingEnum.West, FacingEnum.South)]
+    [TestCase(0, 5, FacingEnum.South, FacingEnum.East)]
+    public void Left_PlaceCalledFirstly_ReturnsTrueAndUpdatesFacing(short x, short y, FacingEnum facing, FacingEnum expectedFacing)
+    {
+        Position expectedPosition = new() { X = x, Y = y };
+        ToyRobot toyRobot = new (_tableBoundaries!);
+
+        bool placeResult = _motionCommands!.Place(toyRobot, x, y, facing);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(toyRobot.Position, Is.EqualTo(expectedPosition));
+            Assert.That(toyRobot.Facing, Is.EqualTo(facing));
+            Assert.That(toyRobot.HasBeenPlaced, Is.True);
+            Assert.That(placeResult, Is.True);
+        });
+
+        bool leftResult = _motionCommands!.Left(toyRobot);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(toyRobot.Position, Is.EqualTo(expectedPosition));
+            Assert.That(toyRobot.Facing, Is.EqualTo(expectedFacing));
+            Assert.That(leftResult, Is.True);
+        });
+    }
+
+    [Test]
+    public void Right_PlaceNotCalledFirstly_ReturnsFalseAndDoesNotUpdateFacing()
+    {
+        Position expectedPosition = new() { X = 0, Y = 0 };
+        ToyRobot toyRobot = new (_tableBoundaries!);
+
+        bool result = _motionCommands!.Right(toyRobot);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(toyRobot.Position, Is.EqualTo(expectedPosition));
+            Assert.That(toyRobot.Facing, Is.EqualTo(FacingEnum.North));
+            Assert.That(toyRobot.HasBeenPlaced, Is.False);
+            Assert.That(result, Is.False);
+        });
+    }
+
+    [Test]
+    [TestCase(0, 0, FacingEnum.North, FacingEnum.East)]
+    [TestCase(1, 1, FacingEnum.East, FacingEnum.South)]
+    [TestCase(4, 1, FacingEnum.West, FacingEnum.North)]
+    [TestCase(0, 5, FacingEnum.South, FacingEnum.West)]
+    public void Right_PlaceCalledFirstly_ReturnsTrueAndUpdatesFacing(short x, short y, FacingEnum facing, FacingEnum expectedFacing)
+    {
+        Position expectedPosition = new() { X = x, Y = y };
+        ToyRobot toyRobot = new (_tableBoundaries!);
+
+        bool placeResult = _motionCommands!.Place(toyRobot, x, y, facing);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(toyRobot.Position, Is.EqualTo(expectedPosition));
+            Assert.That(toyRobot.Facing, Is.EqualTo(facing));
+            Assert.That(toyRobot.HasBeenPlaced, Is.True);
+            Assert.That(placeResult, Is.True);
+        });
+
+        bool rightResult = _motionCommands!.Right(toyRobot);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(toyRobot.Position, Is.EqualTo(expectedPosition));
+            Assert.That(toyRobot.Facing, Is.EqualTo(expectedFacing));
+            Assert.That(rightResult, Is.True);
+        });
+    }
 }

@@ -42,4 +42,52 @@ public class MotionCommands
 
         return result;
     }
+
+    public bool Left(ToyRobot toyRobot)
+    {
+        if (!toyRobot.HasBeenPlaced)
+        {
+            return false;
+        }
+
+        toyRobot.Facing = Rotate(toyRobot.Facing, false);
+
+        return true;
+    }
+
+    public bool Right(ToyRobot toyRobot)
+    {
+        if (!toyRobot.HasBeenPlaced)
+        {
+            return false;
+        }
+
+        toyRobot.Facing = Rotate(toyRobot.Facing, true);
+
+        return true;
+    }
+
+    private static FacingEnum Rotate(FacingEnum facing, bool isClockWise)
+    {
+        if (isClockWise)
+        {
+            return facing switch
+            {
+                FacingEnum.North => FacingEnum.East,
+                FacingEnum.East => FacingEnum.South,
+                FacingEnum.South => FacingEnum.West,
+                FacingEnum.West => FacingEnum.North,
+                _ => FacingEnum.North
+            };
+        }
+
+        return facing switch
+        {
+            FacingEnum.North => FacingEnum.West,
+            FacingEnum.West => FacingEnum.South,
+            FacingEnum.South => FacingEnum.East,
+            FacingEnum.East => FacingEnum.North,
+            _ => FacingEnum.North
+        };
+    }
 }
