@@ -19,4 +19,27 @@ public class MotionCommands
 
         return true;
     }
+
+    public bool Move(ToyRobot toyRobot)
+    {
+        bool result = false;
+
+        if (!toyRobot.HasBeenPlaced)
+        {
+            return result;
+        }
+
+        result = toyRobot.Facing switch
+        {
+            FacingEnum.North => Place(toyRobot, toyRobot.Position.X, (short)(toyRobot.Position.Y + 1),
+                toyRobot.Facing),
+            FacingEnum.East => Place(toyRobot, (short)(toyRobot.Position.X + 1), toyRobot.Position.Y, toyRobot.Facing),
+            FacingEnum.West => Place(toyRobot, (short)(toyRobot.Position.X - 1), toyRobot.Position.Y, toyRobot.Facing),
+            FacingEnum.South => Place(toyRobot, toyRobot.Position.X, (short)(toyRobot.Position.Y - 1),
+                toyRobot.Facing),
+            _ => result
+        };
+
+        return result;
+    }
 }
