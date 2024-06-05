@@ -10,14 +10,14 @@ public class MotionCommands(MotionTable motionTable, ToyRobot toyRobot)
         }
     }
 
-    public bool Place(Position coordinates, Direction direction)
+    public bool Place(Position coordinates, DirectionEnum directionEnum)
     {
         if (motionTable.Boundaries.IsNotInBoundaries(coordinates))
         {
             return false;
         }
 
-        toyRobot.Place(coordinates, direction);
+        toyRobot.Place(coordinates, directionEnum);
 
         return true;
     }
@@ -29,12 +29,12 @@ public class MotionCommands(MotionTable motionTable, ToyRobot toyRobot)
             return false;
         }
 
-        return toyRobot.Direction switch
+        return toyRobot.DirectionEnum switch
         {
-            Direction.North => PlaceNorth(),
-            Direction.East => PlaceEast(),
-            Direction.West => PlaceWest(),
-            Direction.South => PlaceSouth(),
+            DirectionEnum.North => PlaceNorth(),
+            DirectionEnum.East => PlaceEast(),
+            DirectionEnum.West => PlaceWest(),
+            DirectionEnum.South => PlaceSouth(),
             _ => false
         };
     }
@@ -46,7 +46,7 @@ public class MotionCommands(MotionTable motionTable, ToyRobot toyRobot)
             return false;
         }
 
-        toyRobot.Direction = GetNewRotationCounterClockWise(toyRobot.Direction);
+        toyRobot.DirectionEnum = Direction.GetNewRotationCounterClockWise(toyRobot.DirectionEnum);
 
         return true;
     }
@@ -58,7 +58,7 @@ public class MotionCommands(MotionTable motionTable, ToyRobot toyRobot)
             return false;
         }
 
-        toyRobot.Direction = GetNewRotationClockWise(toyRobot.Direction);
+        toyRobot.DirectionEnum = Direction.GetNewRotationClockWise(toyRobot.DirectionEnum);
 
         return true;
     }
@@ -70,7 +70,7 @@ public class MotionCommands(MotionTable motionTable, ToyRobot toyRobot)
             return false;
         }
 
-        Console.Write($"{toyRobot.Position.X},{toyRobot.Position.Y},{GetDirectionWording(toyRobot.Direction)}");
+        Console.Write($"{toyRobot.Position.X},{toyRobot.Position.Y},{Direction.GetDirectionWording(toyRobot.DirectionEnum)}");
 
         return true;
     }
@@ -89,11 +89,11 @@ public class MotionCommands(MotionTable motionTable, ToyRobot toyRobot)
                     {
                         string directionWording = placeArgs[2];
 
-                        if (IsValidDirectionWording(directionWording))
+                        if (Direction.IsValidDirectionWording(directionWording))
                         {
-                            Direction direction = GetDirection(directionWording);
+                            DirectionEnum directionEnum = Direction.GetDirection(directionWording);
 
-                            Place(new Position { X = x, Y = y }, direction);
+                            Place(new Position { X = x, Y = y }, directionEnum);
                         }
                         else
                         {
@@ -125,76 +125,23 @@ public class MotionCommands(MotionTable motionTable, ToyRobot toyRobot)
         }
     }
 
-    private static bool IsValidDirectionWording(string directionWording)
-    {
-        return string.Equals(directionWording, "NORTH") || string.Equals(directionWording, "EAST") || string.Equals(directionWording, "WEST") || string.Equals(directionWording, "SOUTH");
-    }
-
-    private static Direction GetDirection(string directionWording)
-    {
-        return directionWording switch
-        {
-            "NORTH" => Direction.North,
-            "EAST" => Direction.East,
-            "WEST" => Direction.West,
-            "SOUTH" => Direction.South,
-            _ => Direction.North
-        };
-    }
-
-    private static string GetDirectionWording(Direction direction)
-    {
-        return direction switch
-        {
-            Direction.North => "NORTH",
-            Direction.East => "EAST",
-            Direction.West => "WEST",
-            Direction.South => "SOUTH",
-            _ => "NORTH"
-        };
-    }
-
     private bool PlaceNorth()
     {
-        return Place(toyRobot.Position with { Y = (short)(toyRobot.Position.Y + 1) }, toyRobot.Direction);
+        return Place(toyRobot.Position with { Y = (short)(toyRobot.Position.Y + 1) }, toyRobot.DirectionEnum);
     }
 
     private bool PlaceEast()
     {
-        return Place(toyRobot.Position with { X = (short)(toyRobot.Position.X + 1) }, toyRobot.Direction);
+        return Place(toyRobot.Position with { X = (short)(toyRobot.Position.X + 1) }, toyRobot.DirectionEnum);
     }
 
     private bool PlaceWest()
     {
-        return Place(toyRobot.Position with { X = (short)(toyRobot.Position.X - 1) }, toyRobot.Direction);
+        return Place(toyRobot.Position with { X = (short)(toyRobot.Position.X - 1) }, toyRobot.DirectionEnum);
     }
 
     private bool PlaceSouth()
     {
-        return Place(toyRobot.Position with { Y = (short)(toyRobot.Position.Y - 1) }, toyRobot.Direction);
-    }
-
-    private static Direction GetNewRotationClockWise(Direction direction)
-    {
-        return direction switch
-        {
-            Direction.North => Direction.East,
-            Direction.East => Direction.South,
-            Direction.South => Direction.West,
-            Direction.West => Direction.North,
-            _ => Direction.North
-        };
-    }
-
-    private static Direction GetNewRotationCounterClockWise(Direction direction)
-    {
-        return direction switch
-        {
-            Direction.North => Direction.West,
-            Direction.West => Direction.South,
-            Direction.South => Direction.East,
-            Direction.East => Direction.North,
-            _ => Direction.North
-        };
+        return Place(toyRobot.Position with { Y = (short)(toyRobot.Position.Y - 1) }, toyRobot.DirectionEnum);
     }
 }
