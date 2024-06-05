@@ -22,6 +22,107 @@ public class ToyRobotSimulatorTests
     }
 
     [Test]
+    public void ProcessCommands_ValidCommands_ProcessCommands()
+    {
+        const string expectedOutput = "0,2,NORTH";
+
+        IEnumerable<string> commands = new[] { "PLACE 1,2,NORTH", "LEFT", "MOVE", "RIGHT", "REPORT" };
+
+        // Set up a StringWriter to capture console output
+        StringWriter stringWriter = new();
+        Console.SetOut(stringWriter);
+
+        _motionCommands!.ProcessCommands(commands);
+
+        string consoleOutput = stringWriter.ToString();
+
+        Assert.That(consoleOutput, Is.EqualTo(expectedOutput));
+    }
+
+    [Test]
+    public void ProcessCommands_InvalidPlaceCommand_DoesNotProcessCommandsAndDisplaysError()
+    {
+        const string expectedOutput = "Invalid PLACE command format. Expected format: PLACE X,Y,DIRECTION";
+
+        IEnumerable<string> commands = ["PLACE"];
+
+        // Set up a StringWriter to capture console output
+        StringWriter stringWriter = new();
+        Console.SetOut(stringWriter);
+
+        _motionCommands!.ProcessCommands(commands);
+
+        string consoleOutput = stringWriter.ToString();
+
+        Assert.That(consoleOutput, Is.EqualTo(expectedOutput));
+    }
+
+    [Test]
+    [TestCase("PLACE ")]
+    [TestCase("PLACE 1")]
+    [TestCase("PLACE 1,2")]
+    [TestCase("PLACE a,2")]
+    [TestCase("PLACE a,b")]
+    [TestCase("PLACE 32,toto")]
+    public void ProcessCommands_InvalidPlaceCoordinatesParameters_DoesNotProcessCommandsAndDisplaysError(string command)
+    {
+        const string expectedOutput = "Invalid PLACE command parameters. Expected format: PLACE X,Y,DIRECTION";
+
+        IEnumerable<string> commands = [command];
+
+        // Set up a StringWriter to capture console output
+        StringWriter stringWriter = new();
+        Console.SetOut(stringWriter);
+
+        _motionCommands!.ProcessCommands(commands);
+
+        string consoleOutput = stringWriter.ToString();
+
+        Assert.That(consoleOutput, Is.EqualTo(expectedOutput));
+    }
+
+    [Test]
+    [TestCase("PLACE 1,2,North", "North")]
+    [TestCase("PLACE 1,2,NORTE", "NORTE")]
+    [TestCase("PLACE 1,2,WEEST", "WEEST")]
+    public void ProcessCommands_InvalidPlaceDirectionParameters_DoesNotProcessCommandsAndDisplaysError(string command, string directionWording)
+    {
+        string expectedOutput = $"Invalid Direction command parameters. Expected: NORTH, EAST, WEST, SOUTH; received {directionWording}";
+
+        IEnumerable<string> commands = [command];
+
+        // Set up a StringWriter to capture console output
+        StringWriter stringWriter = new();
+        Console.SetOut(stringWriter);
+
+        _motionCommands!.ProcessCommands(commands);
+
+        string consoleOutput = stringWriter.ToString();
+
+        Assert.That(consoleOutput, Is.EqualTo(expectedOutput));
+    }
+
+    [Test]
+    [TestCase("TOTO")]
+    [TestCase("TUTU")]
+    public void ProcessCommands_InvalidCommand_DoesNotProcessCommands(string command)
+    {
+        string expectedOutput = string.Empty;
+
+        IEnumerable<string> commands = [command];
+
+        // Set up a StringWriter to capture console output
+        StringWriter stringWriter = new();
+        Console.SetOut(stringWriter);
+
+        _motionCommands!.ProcessCommands(commands);
+
+        string consoleOutput = stringWriter.ToString();
+
+        Assert.That(consoleOutput, Is.EqualTo(expectedOutput));
+    }
+
+    [Test]
     [TestCase(0, 0, Direction.North)]
     [TestCase(1, 1, Direction.East)]
     [TestCase(4, 1, Direction.West)]
