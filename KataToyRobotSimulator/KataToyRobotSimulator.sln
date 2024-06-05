@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KataToyRobotSimulator", "KataToyRobotSimulator\KataToyRobotSimulator.csproj", "{830512DD-F3C9-4A5E-A637-1906D9F4484A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KataToyRobotSimulatorTests", "KataToyRobotSimulatorTests\KataToyRobotSimulatorTests.csproj", "{8F764ED7-211F-4715-9408-ED8BB32EEB25}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{830512DD-F3C9-4A5E-A637-1906D9F4484A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{830512DD-F3C9-4A5E-A637-1906D9F4484A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{830512DD-F3C9-4A5E-A637-1906D9F4484A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F764ED7-211F-4715-9408-ED8BB32EEB25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F764ED7-211F-4715-9408-ED8BB32EEB25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F764ED7-211F-4715-9408-ED8BB32EEB25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F764ED7-211F-4715-9408-ED8BB32EEB25}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
