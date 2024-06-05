@@ -286,4 +286,127 @@ public class ToyRobotSimulatorTests
             Assert.That(consoleOutput, Is.EqualTo(expectedOutput));
         });
     }
+
+    // Example a
+    [Test]
+    public void ExampleA()
+    {
+        Position expectedPosition = new() { X = 0, Y = 0 };
+        Position expectedPositionAfterMove = new() { X = 0, Y = 1 };
+        const string expectedOutput = "0,1,NORTH";
+        ToyRobot toyRobot = new (_tableBoundaries!);
+
+        bool placeResult = _motionCommands!.Place(toyRobot, 0, 0, FacingEnum.North);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(toyRobot.Position, Is.EqualTo(expectedPosition));
+            Assert.That(toyRobot.Facing, Is.EqualTo(FacingEnum.North));
+            Assert.That(toyRobot.HasBeenPlaced, Is.True);
+            Assert.That(placeResult, Is.True);
+        });
+
+        bool moveResult = _motionCommands!.Move(toyRobot);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(toyRobot.Position, Is.EqualTo(expectedPositionAfterMove));
+            Assert.That(toyRobot.Facing, Is.EqualTo(FacingEnum.North));
+            Assert.That(moveResult, Is.True);
+        });
+
+        // Set up a StringWriter to capture console output
+        StringWriter stringWriter = new();
+        Console.SetOut(stringWriter);
+
+        bool reportResult = _motionCommands!.Report(toyRobot);
+
+        string consoleOutput = stringWriter.ToString();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(toyRobot.Position, Is.EqualTo(expectedPositionAfterMove));
+            Assert.That(toyRobot.Facing, Is.EqualTo(FacingEnum.North));
+            Assert.That(toyRobot.HasBeenPlaced, Is.True);
+            Assert.That(reportResult, Is.True);
+            Assert.That(consoleOutput, Is.EqualTo(expectedOutput));
+        });
+    }
+
+    // Example b
+    [Test]
+    public void ExampleB()
+    {
+        Position expectedPosition = new() { X = 0, Y = 0 };
+        const string expectedOutput = "0,0,WEST";
+        ToyRobot toyRobot = new (_tableBoundaries!);
+
+        bool placeResult = _motionCommands!.Place(toyRobot, 0, 0, FacingEnum.North);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(toyRobot.Position, Is.EqualTo(expectedPosition));
+            Assert.That(toyRobot.Facing, Is.EqualTo(FacingEnum.North));
+            Assert.That(toyRobot.HasBeenPlaced, Is.True);
+            Assert.That(placeResult, Is.True);
+        });
+
+        bool leftResult = _motionCommands!.Left(toyRobot);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(toyRobot.Position, Is.EqualTo(expectedPosition));
+            Assert.That(toyRobot.Facing, Is.EqualTo(FacingEnum.West));
+            Assert.That(leftResult, Is.True);
+        });
+
+        // Set up a StringWriter to capture console output
+        StringWriter stringWriter = new();
+        Console.SetOut(stringWriter);
+
+        bool reportResult = _motionCommands!.Report(toyRobot);
+
+        string consoleOutput = stringWriter.ToString();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(toyRobot.Position, Is.EqualTo(expectedPosition));
+            Assert.That(toyRobot.Facing, Is.EqualTo(FacingEnum.West));
+            Assert.That(toyRobot.HasBeenPlaced, Is.True);
+            Assert.That(reportResult, Is.True);
+            Assert.That(consoleOutput, Is.EqualTo(expectedOutput));
+        });
+    }
+
+    // Example c
+    [Test]
+    public void ExampleC()
+    {
+        Position expectedPosition = new() { X = 3, Y = 3 };
+        const string expectedOutput = "3,3,NORTH";
+        ToyRobot toyRobot = new (_tableBoundaries!);
+
+        _motionCommands!.Place(toyRobot, 1, 2, FacingEnum.East);
+        _motionCommands!.Move(toyRobot);
+        _motionCommands!.Move(toyRobot);
+        _motionCommands!.Left(toyRobot);
+        _motionCommands!.Move(toyRobot);
+
+        // Set up a StringWriter to capture console output
+        StringWriter stringWriter = new();
+        Console.SetOut(stringWriter);
+
+        bool reportResult = _motionCommands!.Report(toyRobot);
+
+        string consoleOutput = stringWriter.ToString();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(toyRobot.Position, Is.EqualTo(expectedPosition));
+            Assert.That(toyRobot.Facing, Is.EqualTo(FacingEnum.North));
+            Assert.That(toyRobot.HasBeenPlaced, Is.True);
+            Assert.That(reportResult, Is.True);
+            Assert.That(consoleOutput, Is.EqualTo(expectedOutput));
+        });
+    }
 }
