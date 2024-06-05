@@ -1,6 +1,6 @@
 ﻿namespace KataToyRobotSimulator;
 
-public enum FacingEnum
+public enum Direction
 {
     North,
     South,

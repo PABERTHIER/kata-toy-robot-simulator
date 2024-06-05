@@ -1,105 +1,113 @@
 ﻿namespace KataToyRobotSimulator;
 
-public class MotionCommands
+public class MotionCommands(MotionTable motionTable, ToyRobot toyRobot)
 {
-    public bool Place(ToyRobot toyRobot, short x, short y, FacingEnum facingEnum)
+    public bool Place(Position coordinates, Direction direction)
     {
-        if (x > toyRobot.TableBoundaries.MaxX || x < toyRobot.TableBoundaries.MinX || y > toyRobot.TableBoundaries.MaxY || y < toyRobot.TableBoundaries.MinY)
+        if (motionTable.Boundaries.IsNotInBoundaries(coordinates))
         {
             return false;
         }
 
-        toyRobot.Position = new() { X = x, Y = y };
-        toyRobot.Facing = facingEnum;
-
-        if (!toyRobot.HasBeenPlaced)
-        {
-            toyRobot.HasBeenPlaced = true;
-        }
+        toyRobot.Place(coordinates, direction);
 
         return true;
     }
 
-    public bool Move(ToyRobot toyRobot)
+    public bool Move()
     {
-        bool result = false;
-
         if (!toyRobot.HasBeenPlaced)
         {
-            return result;
+            return false;
         }
 
-        result = toyRobot.Facing switch
+        return toyRobot.Direction switch
         {
-            FacingEnum.North => Place(toyRobot, toyRobot.Position.X, (short)(toyRobot.Position.Y + 1),
-                toyRobot.Facing),
-            FacingEnum.East => Place(toyRobot, (short)(toyRobot.Position.X + 1), toyRobot.Position.Y, toyRobot.Facing),
-            FacingEnum.West => Place(toyRobot, (short)(toyRobot.Position.X - 1), toyRobot.Position.Y, toyRobot.Facing),
-            FacingEnum.South => Place(toyRobot, toyRobot.Position.X, (short)(toyRobot.Position.Y - 1),
-                toyRobot.Facing),
-            _ => result
+            Direction.North => PlaceNorth(),
+            Direction.East => PlaceEast(),
+            Direction.West => PlaceWest(),
+            Direction.South => PlaceSouth(),
+            _ => false
         };
-
-        return result;
     }
 
-    public bool Left(ToyRobot toyRobot)
+    public bool Left()
     {
         if (!toyRobot.HasBeenPlaced)
         {
             return false;
         }
 
-        toyRobot.Facing = Rotate(toyRobot.Facing, false);
+        toyRobot.Direction = GetNewRotationCounterClockWise(toyRobot.Direction);
 
         return true;
     }
 
-    public bool Right(ToyRobot toyRobot)
+    public bool Right()
     {
         if (!toyRobot.HasBeenPlaced)
         {
             return false;
         }
 
-        toyRobot.Facing = Rotate(toyRobot.Facing, true);
+        toyRobot.Direction = GetNewRotationClockWise(toyRobot.Direction);
 
         return true;
     }
 
-    public bool Report(ToyRobot toyRobot)
+    public bool Report()
     {
         if (!toyRobot.HasBeenPlaced)
         {
             return false;
         }
 
-        Console.Write($"{toyRobot.Position.X},{toyRobot.Position.Y},{toyRobot.Facing.ToString().ToUpper()}");
+        Console.Write($"{toyRobot.Position.X},{toyRobot.Position.Y},{toyRobot.Direction.ToString().ToUpper()}");
 
         return true;
     }
 
-    private static FacingEnum Rotate(FacingEnum facing, bool isClockWise)
+    private bool PlaceNorth()
     {
-        if (isClockWise)
-        {
-            return facing switch
-            {
-                FacingEnum.North => FacingEnum.East,
-                FacingEnum.East => FacingEnum.South,
-                FacingEnum.South => FacingEnum.West,
-                FacingEnum.West => FacingEnum.North,
-                _ => FacingEnum.North
-            };
-        }
+        return Place(toyRobot.Position with { Y = (short)(toyRobot.Position.Y + 1) }, toyRobot.Direction);
+    }
 
-        return facing switch
+    private bool PlaceEast()
+    {
+        return Place(toyRobot.Position with { X = (short)(toyRobot.Position.X + 1) }, toyRobot.Direction);
+    }
+
+    private bool PlaceWest()
+    {
+        return Place(toyRobot.Position with { X = (short)(toyRobot.Position.X - 1) }, toyRobot.Direction);
+    }
+
+    private bool PlaceSouth()
+    {
+        return Place(toyRobot.Position with { Y = (short)(toyRobot.Position.Y - 1) }, toyRobot.Direction);
+    }
+
+    private static Direction GetNewRotationClockWise(Direction direction)
+    {
+        return direction switch
         {
-            FacingEnum.North => FacingEnum.West,
-            FacingEnum.West => FacingEnum.South,
-            FacingEnum.South => FacingEnum.East,
-            FacingEnum.East => FacingEnum.North,
-            _ => FacingEnum.North
+            Direction.North => Direction.East,
+            Direction.East => Direction.South,
+            Direction.South => Direction.West,
+            Direction.West => Direction.North,
+            _ => Direction.North
+        };
+    }
+
+    private static Direction GetNewRotationCounterClockWise(Direction direction)
+    {
+        return direction switch
+        {
+            Direction.North => Direction.West,
+            Direction.West => Direction.South,
+            Direction.South => Direction.East,
+            Direction.East => Direction.North,
+            _ => Direction.North
         };
     }
 }
