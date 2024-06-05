@@ -9,20 +9,8 @@ internal static class Program
         ToyRobot toyRobot = new();
         MotionCommands motionCommands = new (motionTable, toyRobot);
 
-        List<string> commands = new();
-
-        if (args.Length > 0)
-        {
-            string filePath = args[0];
-            commands.AddRange(File.ReadAllLines(filePath));
-        }
-        else
-        {
-            while (Console.ReadLine() is { } line && line != "")
-            {
-                commands.Add(line);
-            }
-        }
+        CommandReader commandReader = new();
+        IEnumerable<string> commands = commandReader.ReadCommands(args);
 
         motionCommands.ProcessCommands(commands);
     }

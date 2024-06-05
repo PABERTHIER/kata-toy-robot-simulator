@@ -1,8 +1,9 @@
-namespace KataToyRobotSimulatorTests;
+namespace KataToyRobotSimulatorTests.MotionCommands;
 
-public class ToyRobotSimulatorTests
+[TestFixture]
+public class MotionCommandsTests
 {
-    private MotionCommands? _motionCommands;
+    private KataToyRobotSimulator.MotionCommands? _motionCommands;
     private MotionTable? _motionTable;
     private Boundaries _boundaries;
     private ToyRobot? _toyRobot;
@@ -10,14 +11,14 @@ public class ToyRobotSimulatorTests
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
-        _boundaries = new () { MinPosition = new Position { X = 0, Y = 0 }, MaxPosition = new Position { X = 5, Y = 5 } };
+        _boundaries = new() { MinPosition = new Position { X = 0, Y = 0 }, MaxPosition = new Position { X = 5, Y = 5 } };
         _motionTable = new (_boundaries);
     }
 
     [SetUp]
     public void Setup()
     {
-        _toyRobot = new ();
+        _toyRobot = new();
         _motionCommands = new (_motionTable!, _toyRobot);
     }
 
@@ -110,6 +111,60 @@ public class ToyRobotSimulatorTests
         string expectedOutput = string.Empty;
 
         IEnumerable<string> commands = [command];
+
+        // Set up a StringWriter to capture console output
+        StringWriter stringWriter = new();
+        Console.SetOut(stringWriter);
+
+        _motionCommands!.ProcessCommands(commands);
+
+        string consoleOutput = stringWriter.ToString();
+
+        Assert.That(consoleOutput, Is.EqualTo(expectedOutput));
+    }
+
+    [Test]
+    public void ProcessCommands_ExampleA_StandardInput()
+    {
+        const string expectedOutput = "0,1,NORTH";
+
+        IEnumerable<string> commands = new[] { "PLACE 0,0,NORTH", "MOVE", "REPORT" };
+
+        // Set up a StringWriter to capture console output
+        StringWriter stringWriter = new();
+        Console.SetOut(stringWriter);
+
+        _motionCommands!.ProcessCommands(commands);
+
+        string consoleOutput = stringWriter.ToString();
+
+        Assert.That(consoleOutput, Is.EqualTo(expectedOutput));
+    }
+
+    [Test]
+    public void ProcessCommands_ExampleB_StandardInput()
+    {
+        const string expectedOutput = "0,0,WEST";
+
+        IEnumerable<string> commands = new[] { "PLACE 0,0,NORTH", "LEFT", "REPORT" };
+
+        // Set up a StringWriter to capture console output
+        StringWriter stringWriter = new();
+        Console.SetOut(stringWriter);
+
+        _motionCommands!.ProcessCommands(commands);
+
+        string consoleOutput = stringWriter.ToString();
+
+        Assert.That(consoleOutput, Is.EqualTo(expectedOutput));
+    }
+
+    [Test]
+    public void ProcessCommands_ExampleC_StandardInput()
+    {
+        const string expectedOutput = "3,3,NORTH";
+
+        IEnumerable<string> commands = new[] { "PLACE 1,2,EAST", "MOVE", "MOVE", "LEFT", "MOVE", "REPORT" };
 
         // Set up a StringWriter to capture console output
         StringWriter stringWriter = new();
@@ -381,9 +436,8 @@ public class ToyRobotSimulatorTests
         });
     }
 
-    // Example a
     [Test]
-    public void ExampleA()
+    public void MotionCommands_ExampleA()
     {
         Position expectedPosition = new() { X = 0, Y = 0 };
         Position expectedPositionAfterMove = new() { X = 0, Y = 1 };
@@ -426,9 +480,8 @@ public class ToyRobotSimulatorTests
         });
     }
 
-    // Example b
     [Test]
-    public void ExampleB()
+    public void MotionCommands_ExampleB()
     {
         Position expectedPosition = new() { X = 0, Y = 0 };
         const string expectedOutput = "0,0,WEST";
@@ -470,9 +523,8 @@ public class ToyRobotSimulatorTests
         });
     }
 
-    // Example c
     [Test]
-    public void ExampleC()
+    public void MotionCommands_ExampleC()
     {
         Position expectedPosition = new() { X = 3, Y = 3 };
         const string expectedOutput = "3,3,NORTH";
